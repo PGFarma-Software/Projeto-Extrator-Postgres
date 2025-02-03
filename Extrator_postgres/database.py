@@ -201,8 +201,8 @@ def processar_dados(df_pandas: pd.DataFrame, nome: str, pasta_temp: str) -> Tupl
                 pl.col(coluna_data).str.slice(5, 2).alias("Mes"),
                 pl.col(coluna_data).str.slice(8, 2).alias("Dia")
             ])
-            amostra_particoes = df_polars.select(["Ano", "Mes", "Dia"]).unique().head(5)
-            logging.info(f"Amostra das partições para '{nome}':\n{amostra_particoes.to_pandas().to_string(index=False)}")
+          #  amostra_particoes = df_polars.select(["Ano", "Mes", "Dia"]).unique().head(5)
+         #   logging.info(f"Amostra das partições para '{nome}':\n{amostra_particoes.to_pandas().to_string(index=False)}")
 
         df_polars = ajustar_tipos_dados(df_polars, nome)
         if 'idEmpresa' not in df_polars.schema:
