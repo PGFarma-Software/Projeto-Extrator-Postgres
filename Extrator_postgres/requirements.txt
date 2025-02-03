@@ -21,3 +21,5 @@ loguru
 structlog
 humanfriendly
 polars-lts-cpu #Para maior compatibilidade e estabilidade
+aiofiles~=24.1.0
+aioboto3~=13.4.0

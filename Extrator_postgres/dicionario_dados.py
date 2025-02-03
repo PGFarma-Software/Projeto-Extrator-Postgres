@@ -26,6 +26,11 @@ def obter_caminho_dicionario():
     return os.path.join(base_path, "dicionarios_tipos.json")
 
 
+# Cache global para carregar o dicionário apenas uma vez
+
+_dicionarios_cache = None
+
+
 def obter_dicionario_tipos(nome_consulta):
     """
     Retorna o dicionário de tipos para uma consulta específica.
@@ -59,53 +64,63 @@ def obter_dicionario_tipos(nome_consulta):
     return resultado
 
 
-# Cache global para carregar o dicionário apenas uma vez
-_dicionarios_cache = None
 
 
-def ajustar_tipos_dados(dataframe: pl.DataFrame, nome_consulta: str) -> pl.DataFrame:
+# Dicionário global para cache de mapeamento por consulta
+_tipo_cache = {}
+
+def ajustar_tipos_dados(dataframe: pl.DataFrame, nome_consulta: str, log_adjust: bool = True) -> pl.DataFrame:
     """
     Ajusta os tipos de dados do DataFrame com base no dicionário de tipos definido para a consulta.
 
     Args:
         dataframe (pl.DataFrame): DataFrame a ser ajustado.
-        nome_consulta (str): Nome da consulta, para identificar o dicionário de tipos correspondente.
+        nome_consulta (str): Nome da consulta (usado para identificar o dicionário de tipos).
+        log_adjust (bool): Se True, exibe logs detalhados; se False, suprime logs para chamadas subsequentes.
 
     Returns:
-        pl.DataFrame: DataFrame ajustado.
+        pl.DataFrame: DataFrame com os tipos ajustados.
     """
-    dicionario = obter_dicionario_tipos(nome_consulta)
+    global _tipo_cache
 
+    # Se já houver cache para esta consulta, recupera-o
+    if nome_consulta in _tipo_cache:
+        dicionario, tipo_polars = _tipo_cache[nome_consulta]
+    else:
+        dicionario = obter_dicionario_tipos(nome_consulta)
+        if not dicionario:
+            if log_adjust:
+                logging.warning(f"[Consulta: {nome_consulta}] Dicionário de tipos não encontrado. Dados serão retornados sem ajuste.")
+            return dataframe
 
-    if not dicionario:
-        logging.warning(f"[Consulta: {nome_consulta}] Dicionário de tipos não encontrado. Dados serão retornados sem ajuste.")
-        return dataframe
+        tipo_polars = {
+            "string": pl.Utf8,
+            "int64": pl.Int64,
+            "float64": pl.Float64,
+            "date": pl.Date,
+            "timestamp": pl.Datetime("ms"),
+            "datetime": pl.Datetime
+        }
+        _tipo_cache[nome_consulta] = (dicionario, tipo_polars)
 
-    tipo_polars = {
-        "string": pl.Utf8,
-        "int64": pl.Int64,
-        "float64": pl.Float64,
-        "date": pl.Date,
-        "timestamp": pl.Datetime("ms"),
-        "datetime": pl.Datetime
-    }
-    # 🔹 Conversão automática de float64 para int64 (evita 35 → 35.0 no Parquet)
+    # Conversão automática de float64 para int64 se todos os valores forem inteiros
     for coluna in dataframe.schema:
         if dataframe.schema[coluna] == pl.Float64:
             try:
-                # 🔹 Converte para Pandas e garante que valores são float antes de chamar is_integer()
+                # Utiliza Pandas para verificar se todos os valores são inteiros (após remover nulos)
                 if dataframe[coluna].drop_nulls().to_pandas().apply(lambda x: float(x).is_integer() if not pd.isna(x) else False).all():
                     dataframe = dataframe.with_columns(pl.col(coluna).cast(pl.Int64))
-                    logging.info(f"Coluna '{coluna}' convertida automaticamente de float64 para int64.")
+                    if log_adjust:
+                        logging.info(f"Coluna '{coluna}' convertida de float64 para int64 automaticamente.")
             except Exception as e:
-                logging.error(f"Erro ao verificar conversão automática de '{coluna}': {e}")
+                if log_adjust:
+                    logging.error(f"Erro ao verificar conversão automática da coluna '{coluna}': {e}")
 
-
-
-
+    # Ajuste dos tipos conforme o dicionário
     for coluna, tipo in dicionario.items():
         if coluna not in dataframe.schema:
-            logging.warning(f"Coluna '{coluna}' ausente. Adicionando com valor padrão.")
+            if log_adjust:
+                logging.warning(f"Coluna '{coluna}' ausente. Adicionando com valor padrão.")
             valor_padrao = {
                 "string": "",
                 "int64": 0,
@@ -122,7 +137,9 @@ def ajustar_tipos_dados(dataframe: pl.DataFrame, nome_consulta: str) -> pl.DataF
                     pl.col(coluna).cast(tipo_polars[tipo])
                 )
             except Exception as e:
-                logging.error(f"Erro ao ajustar coluna '{coluna}' para tipo '{tipo}': {e}")
+                if log_adjust:
+                    logging.error(f"Erro ao ajustar a coluna '{coluna}' para o tipo '{tipo}': {e}")
 
-    logging.info(f"[Consulta: {nome_consulta}] Tipos ajustados com sucesso.")
+    if log_adjust:
+        logging.info(f"[Consulta: {nome_consulta}] Tipos ajustados com sucesso.")
     return dataframe
