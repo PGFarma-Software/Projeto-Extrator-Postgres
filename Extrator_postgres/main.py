@@ -26,39 +26,59 @@ logging.basicConfig(
     handlers=[logging.StreamHandler(sys.stdout)]
 )
 
-
 def enviar_tabela_atualizacao(portal, destino_tipo, destino_config, consultas_status, workers, inicio_processo):
     """
     Cria e envia a tabela de atualização para os destinos configurados.
     Somente será enviada se todas as consultas forem bem-sucedidas.
+
+    Args:
+        portal (str): Caminho base no destino.
+        destino_tipo (str): Tipo de destino ("azure", "s3" ou "ambos").
+        destino_config (dict): Configurações dos destinos.
+        consultas_status (dict): Dicionário com o status de cada consulta (`True` se enviada com sucesso).
+        workers (int): Número de threads para envio.
+        inicio_processo (str): Timestamp do início do processo.
     """
     try:
-        if len(consultas_status) != 8 or not all(consultas_status.values()):
+        # 🔹 Verificar se TODAS as consultas foram bem-sucedidas
+        if not consultas_status or not all(consultas_status.values()):
             logging.error(
-                "A tabela de atualização não será enviada, pois nem todas as consultas foram processadas com sucesso "
-                "ou o número de consultas não é 8.")
+                "A tabela de atualização NÃO será enviada, pois nem todas as consultas foram processadas com sucesso."
+            )
             return
 
         logging.info("Criando tabela de atualização...")
+
         df_atualizacao = pl.DataFrame({
             "DataHoraAtualizacao": [inicio_processo],
             "idEmp": [STORAGE_CONFIG["idemp"]],
             "idEmpresa": [STORAGE_CONFIG["idemp"]]
         })
+
+        # 🔹 Ajustar tipos de dados antes de salvar
         df_atualizacao = ajustar_tipos_dados(df_atualizacao, "Atualizacao")
 
+        # 🔹 Criar diretório temporário para salvar a tabela de atualização
         temp_dir = os.path.join("temp", "Atualizacao")
         os.makedirs(temp_dir, exist_ok=True)
 
+        # 🔹 Salvar a tabela de atualização no formato Parquet
         pq.write_to_dataset(
             df_atualizacao.to_arrow(),
             root_path=temp_dir,
             partition_cols=['idEmpresa']
         )
 
-        logging.info("Enviando tabela de atualização...")
-        enviar_resultados(temp_dir, "Atualizacao", portal, destino_tipo, destino_config, workers=workers)
-        logging.info("Tabela de atualização enviada com sucesso!")
+        logging.info("Tabela de atualização criada. Iniciando envio...")
+
+        # 🔹 Enviar a tabela de atualização para o destino
+        sucesso_envio = enviar_resultados(temp_dir, portal, destino_tipo, destino_config, workers=workers,nome_consulta="Atualizacao")
+
+        # 🔹 Verificar se o envio foi bem-sucedido
+        if sucesso_envio:
+            logging.info("Tabela de atualização enviada com sucesso!")
+        else:
+            logging.error("Falha no envio da tabela de atualização!")
 
     except Exception as e:
         logging.error(f"Erro ao enviar tabela de atualização: {e}")
@@ -133,29 +153,64 @@ def main():
         pasta_temp = "temp"
         os.makedirs(pasta_temp, exist_ok=True)
 
-        # Executar consultas
-        pastas_resultados = executar_consultas(conexoes_config, consultas, pasta_temp, paralela=True, workers=workers)
-        pastas_resultados = {nome.replace(" ", ""): caminho for nome, caminho in pastas_resultados.items() if caminho}
+        # Executar consultas e obter as pastas com os dados processados
+        pastas_resultados, particoes_utilizadas = executar_consultas(
+            conexoes_config, consultas, pasta_temp, paralela=True, workers=workers
+        )
+
+        # Remover espaços dos nomes das consultas para evitar problemas na manipulação
+        pastas_resultados = {
+            nome.replace(" ", ""): caminho
+            for nome, caminho in pastas_resultados.items()
+            if caminho
+        }
 
         if not pastas_resultados:
             logging.error("Nenhuma consulta gerou resultados válidos. Nenhum dado será enviado.")
             return
 
-        # Enviar resultados
+        # Exibir as consultas e partições que serão enviadas
+        logging.info("Resumo das consultas concluídas:")
+        for nome_consulta, pasta_consulta in pastas_resultados.items():
+            logging.info(f" - {nome_consulta}: {pasta_consulta}")
+
+        # Dicionário para armazenar o status do envio das consultas
         consultas_status = {}
+
         for nome_consulta, pasta_consulta in pastas_resultados.items():
             try:
-                sucesso = enviar_resultados(pasta_consulta, nome_consulta, portal, destino_tipo, destino_config,
-                                            workers)
+                logging.info(f"Iniciando envio da consulta '{nome_consulta}'...")
+
+                sucesso = enviar_resultados(
+                    pasta_consulta, portal, destino_tipo, destino_config, workers,nome_consulta
+                )
+
                 consultas_status[nome_consulta] = sucesso
-                status_msg = "enviada" if sucesso else "falhou no envio"
-                logging.info(f"Consulta '{nome_consulta}' {status_msg}.")
+
+                if sucesso:
+                    logging.info(f"Consulta '{nome_consulta}' enviada com sucesso.")
+                else:
+                    logging.error(f"Falha no envio da consulta '{nome_consulta}'.")
+
             except Exception as e:
                 consultas_status[nome_consulta] = False
-                logging.error(f"Erro ao enviar consulta '{nome_consulta}': {e}")
+                logging.error(f"Erro inesperado ao enviar consulta '{nome_consulta}': {e}")
+
+        # Exibir um resumo final do envio
+        sucessos = sum(1 for v in consultas_status.values() if v)  # Conta apenas os True
+        falhas = len(consultas_status) - sucessos
+
+        logging.info(f"Resumo do envio: {sucessos} consultas enviadas com sucesso, {falhas} falhas.")
+
+        if falhas > 0:
+            logging.error("Nem todas as consultas foram enviadas corretamente. A tabela de atualização não será gerada.")
+            return
+
+        logging.info("Todas as consultas foram enviadas com sucesso. Prosseguindo com a tabela de atualização...")
 
         # Enviar tabela de atualização apenas se todas as consultas foram bem-sucedidas
         enviar_tabela_atualizacao(portal, destino_tipo, destino_config, consultas_status, workers, inicio_processo)
+
 
     except Exception as e:
         logging.error(f"Erro na execução principal: {e}")

@@ -7,7 +7,7 @@ import concurrent.futures
 import gc
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from typing import List, Dict
+from typing import List, Dict, Tuple
 import pyarrow.parquet as pq
 import polars as pl
 import pandas as pd
@@ -67,15 +67,16 @@ def fechar_conexao(conexao: Connection):
         logging.error(f"Erro ao fechar a conexão: {e}")
 
 
+
 def executar_consultas(
     conexoes_config: dict,
     consultas: List[Dict[str, str]],
     pasta_temp: str,
     paralela: bool = False,
     workers: int = 4,
-) -> Dict[str, str]:
+) -> Tuple[Dict[str, str], Dict[str, set]]:
     """
-    Executa consultas no banco de dados de forma paralela ou sequencial utilizando conexão persistente.
+    Executa consultas no banco de dados de forma paralela ou sequencial, mantendo uma única conexão persistente.
 
     Args:
         conexoes_config (dict): Configuração de conexão com o banco de dados.
@@ -85,57 +86,65 @@ def executar_consultas(
         workers (int): Número de threads para execução paralela.
 
     Returns:
-        Dict[str, str]: Dicionário com os caminhos das pastas com os arquivos particionados.
+        Tuple[Dict[str, str], Dict[str, set]]:
+            - Dicionário com os caminhos das pastas com os arquivos particionados.
+            - Dicionário com as partições que foram criadas.
     """
     resultados = {}
+    particoes_criadas = {}
     os.makedirs(pasta_temp, exist_ok=True)
 
-    # 🔹 Criar conexão única para todas as consultas
     conexao = None
     try:
+        # 🔹 Criar uma única conexão para todas as consultas
         conexao = conectar_ao_banco(**conexoes_config)
-        logging.info("Conexão única com o banco estabelecida.")
 
         def processa_consulta(consulta):
             nome_consulta = consulta.get("name", "").replace(" ", "")
             query = consulta.get("query")
 
             try:
-                pasta_consulta = executar_consulta(conexao, nome_consulta, query, pasta_temp)
+                pasta_consulta, particoes = executar_consulta(conexao, nome_consulta, query, pasta_temp)
+
                 if pasta_consulta:
-                    return nome_consulta, pasta_consulta
+                    return nome_consulta, pasta_consulta, particoes
                 else:
-                    return nome_consulta, None
+                    return nome_consulta, None, set()
+
             except Exception as e:
                 logging.error(f"Erro ao processar consulta '{nome_consulta}': {e}")
-                return nome_consulta, None
+                return nome_consulta, None, set()
 
         # 🔹 Execução paralela ou sequencial
         if paralela:
             with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
                 futuros = {executor.submit(processa_consulta, consulta): consulta for consulta in consultas}
                 for futuro in concurrent.futures.as_completed(futuros):
-                    nome_consulta, pasta_consulta = futuro.result()
+                    nome_consulta, pasta_consulta, particoes = futuro.result()
                     if pasta_consulta:
                         resultados[nome_consulta] = pasta_consulta
+                        particoes_criadas[nome_consulta] = particoes
         else:
             for consulta in consultas:
-                nome_consulta, pasta_consulta = processa_consulta(consulta)
+                nome_consulta, pasta_consulta, particoes = processa_consulta(consulta)
                 if pasta_consulta:
                     resultados[nome_consulta] = pasta_consulta
+                    particoes_criadas[nome_consulta] = particoes
 
     except Exception as e:
-        logging.error(f"Erro ao conectar ao banco de dados: {e}")
+        logging.error(f"Erro na execução das consultas: {e}")
+
     finally:
+        # 🔹 Fechar a conexão apenas no final
         if conexao:
             fechar_conexao(conexao)
-            logging.info("Conexão com o banco fechada.")
+            logging.info("Conexão com o banco de dados fechada.")
 
-    return resultados  # 🔹 Retorna as pastas finais prontas para envio
+    return resultados, particoes_criadas  # 🔹 Retorna os caminhos das consultas e as partições criadas
 
 
 
-def executar_consulta(conexao, nome: str, query: str, pasta_temp: str) -> str:
+def executar_consulta(conexao, nome: str, query: str, pasta_temp: str) -> Tuple[str, set]:
     """
     Executa uma consulta SQL e retorna os dados como um DataFrame.
 
@@ -146,7 +155,7 @@ def executar_consulta(conexao, nome: str, query: str, pasta_temp: str) -> str:
         pasta_temp (str): Pasta onde os arquivos serão salvos.
 
     Returns:
-        str: Caminho da pasta final com os arquivos Parquet particionados.
+        Tuple[str, set]: Caminho da pasta final com os arquivos Parquet particionados e partições criadas.
     """
     retries = 5  # Tentativas para lidar com falhas de conexão
 
@@ -159,7 +168,7 @@ def executar_consulta(conexao, nome: str, query: str, pasta_temp: str) -> str:
 
             if df_pandas.empty:
                 logging.warning(f"Consulta '{nome}' retornou um DataFrame vazio.")
-                return ""
+                return "", set()
 
             total_registros = len(df_pandas)
             logging.info(f"Consulta '{nome}' finalizada. Total de registros: {total_registros}")
@@ -173,14 +182,14 @@ def executar_consulta(conexao, nome: str, query: str, pasta_temp: str) -> str:
 
         except Exception as e:
             logging.error(f"Erro ao executar a consulta '{nome}': {e}")
-            return ""
+            return "", set()
 
     logging.error(f"Consulta '{nome}' falhou após {retries} tentativas.")
-    return ""
+    return "", set()
 
 
 
-def processar_dados(df_pandas: pd.DataFrame, nome: str, pasta_temp: str) -> str:
+def processar_dados(df_pandas: pd.DataFrame, nome: str, pasta_temp: str) -> Tuple[str, set]:
     """
     Aplica tratamentos e salva os arquivos em Parquet particionado.
 
@@ -190,13 +199,10 @@ def processar_dados(df_pandas: pd.DataFrame, nome: str, pasta_temp: str) -> str:
         pasta_temp (str): Pasta final onde os arquivos serão salvos.
 
     Returns:
-        str: Caminho da pasta final com os arquivos Parquet particionados.
+        Tuple[str, set]: Caminho da pasta final com os arquivos Parquet particionados e partições criadas.
     """
     try:
-        # 🔹 Garante que a pasta final existe
         os.makedirs(pasta_temp, exist_ok=True)
-
-        # 🔹 Define a pasta onde os arquivos serão salvos
         pasta_consulta = os.path.join(pasta_temp, nome)
 
         logging.info(f"Processando dados da consulta '{nome}'...")
@@ -208,35 +214,63 @@ def processar_dados(df_pandas: pd.DataFrame, nome: str, pasta_temp: str) -> str:
             elif df_pandas["HoraVenda"].dtype == "object":
                 df_pandas["HoraVenda"] = df_pandas["HoraVenda"].astype(str).str.extract(r"(\d{2}:\d{2}:\d{2})")[0].fillna("00:00:00")
 
-        # 🔹 Converte para Polars e adiciona colunas extras
+
         df_polars = pl.from_pandas(df_pandas).with_columns([
             pl.lit(datetime.now(pytz.timezone("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M:%S")).alias("DataHoraAtualizacao"),
             pl.lit(STORAGE_CONFIG["idemp"]).alias("idEmpresa"),
             pl.lit(STORAGE_CONFIG["idemp"]).alias("idEmp")
         ])
 
-        # 🔹 Ajusta tipos de dados
+        # Identificar se há partição extra (DataVenda para Vendas, DataEmissaoNF para Compras)
+        coluna_data = None
+        if nome.lower() == "vendas" and "DataVenda" in df_polars.schema:
+            coluna_data = "DataVenda"
+        elif nome.lower() == "compras" and "DataEmissaoNF" in df_polars.schema:
+            coluna_data = "DataEmissaoNF"
+
+        # Criar partição AnoMesDia removendo os hífens
+        if coluna_data:
+            logging.info(f"Gerando partição AnoMesDia com base na coluna '{coluna_data}'")
+
+            # Converter para string e remover hífens
+            df_polars = df_polars.with_columns(
+                pl.col(coluna_data)
+                .cast(pl.Utf8)  # Garantir que está como string
+                .str.replace_all("-", "")  # Remover hífens para ficar YYYYMMDD
+                .alias("AnoMesDia")
+            )
+
+            # ✅ Exibir amostra da nova partição para validação
+          # amostra_particao = df_polars.select("AnoMesDia").unique().head(5)
+          # logging.info(f"Amostra dos valores da coluna 'AnoMesDia' para '{nome}':\n{amostra_particao.to_pandas().to_string(index=False)}")
+
+
+        # Aplicar ajuste de tipos APÓS criar a coluna AnoMesDia
         df_polars = ajustar_tipos_dados(df_polars, nome)
 
         if 'idEmpresa' not in df_polars.schema:
             raise ValueError("A coluna 'idEmpresa' é obrigatória para particionamento.")
 
+        # Definir colunas de partição
+        partition_cols = ["idEmpresa"]
+        if "AnoMesDia" in df_polars.schema:
+            partition_cols.append("AnoMesDia")
+
         logging.info(f"Salvando '{nome}' em formato particionado...")
 
-        # 🔹 Salvar particionado por 'idEmpresa'
         pq.write_to_dataset(
             df_polars.to_arrow(),
             root_path=pasta_consulta,
-            partition_cols=['idEmpresa'],
+            partition_cols=partition_cols,
             compression="snappy",
-            use_dictionary=True,  # Otimiza colunas repetitivas
-            row_group_size=500_000  # Ajustável conforme necessidade
-            )
+            use_dictionary=True,
+            row_group_size=500_000
+        )
 
-        logging.info(f"Salvamento concluído para '{nome}'. Arquivos disponíveis em: {pasta_consulta}")
+        particoes_criadas = {os.path.join(pasta_consulta, d) for d in os.listdir(pasta_consulta)}
 
-        return pasta_consulta  # 🔹 Retorna o caminho da pasta final já pronta
+        return pasta_consulta, particoes_criadas
 
     except Exception as e:
         logging.error(f"Erro ao processar dados da consulta '{nome}': {e}")
-        return ""
+        return "", set()

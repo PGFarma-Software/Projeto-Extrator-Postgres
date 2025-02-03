@@ -1,0 +1,258 @@
+2025-01-31 17:50:45,287 - INFO     - [logging_config.py:91]  Sistema iniciado no modo: local
+2025-01-31 17:50:45,304 - INFO     - [main.py:96] Sistema iniciado às 31/01/2025 17:50:45
+2025-01-31 17:50:45,441 - INFO     - [mongo.py:42] Conectando ao MongoDB...
+2025-01-31 17:50:47,194 - INFO     - [mongo.py:59] Parâmetros obtidos com sucesso do MongoDB para o cliente 'Teste Adriano H Postgres Alpha 7 Cliente 416'.
+2025-01-31 17:50:47,359 - INFO     - [mongo.py:75] Conectando ao MongoDB...
+2025-01-31 17:50:48,881 - INFO     - [mongo.py:86] Parâmetros obtidos com sucesso do MongoDB: 1 documentos encontrados.
+2025-01-31 17:50:49,038 - INFO     - [config.py:216] Configurando conexão com o banco de dados a partir dos parâmetros.
+2025-01-31 17:50:49,039 - INFO     - [config.py:235] Configurando quantidade de linhas por consulta a partir dos parâmetros.
+2025-01-31 17:50:49,040 - INFO     - [config.py:248] Configurando numero de workers a partir dos parâmetros.
+2025-01-31 17:50:49,040 - INFO     - [main.py:132] Os dados serão enviados para **Azure Blob Storage** no container 'adriano-teste' e para **Amazon S3** no bucket 'docker-teste'.
+2025-01-31 17:50:49,041 - INFO     - [main.py:135] Executando com 1 threads.
+2025-01-31 17:50:49,041 - INFO     - [database.py:42] Conectando ao banco de dados PostgreSQL...
+2025-01-31 17:50:51,500 - INFO     - [database.py:49] Conexão com o banco de dados PostgreSQL estabelecida com sucesso.
+2025-01-31 17:50:51,501 - INFO     - [database.py:164] Executando consulta: Clientes...
+2025-01-31 17:51:01,999 - INFO     - [database.py:174] Consulta 'Clientes' finalizada. Total de registros: 29216
+2025-01-31 17:51:02,000 - INFO     - [database.py:208] Processando dados da consulta 'Clientes'...
+2025-01-31 17:51:02,043 - INFO     - [dicionario_dados.py:49] Dicionário de tipos carregado com sucesso.
+2025-01-31 17:51:02,043 - INFO     - [dicionario_dados.py:58] Dicionário carregado para a consulta: Clientes
+2025-01-31 17:51:02,050 - INFO     - [dicionario_dados.py:127] [Consulta: Clientes] Tipos ajustados com sucesso.
+2025-01-31 17:51:02,051 - INFO     - [database.py:259] Salvando 'Clientes' em formato particionado...
+2025-01-31 17:51:02,218 - INFO     - [database.py:164] Executando consulta: CodigoBarras...
+2025-01-31 17:51:03,101 - INFO     - [database.py:174] Consulta 'CodigoBarras' finalizada. Total de registros: 35799
+2025-01-31 17:51:03,102 - INFO     - [database.py:208] Processando dados da consulta 'CodigoBarras'...
+2025-01-31 17:51:03,105 - INFO     - [dicionario_dados.py:58] Dicionário carregado para a consulta: CodigoBarras
+2025-01-31 17:51:03,107 - INFO     - [dicionario_dados.py:127] [Consulta: CodigoBarras] Tipos ajustados com sucesso.
+2025-01-31 17:51:03,107 - INFO     - [database.py:259] Salvando 'CodigoBarras' em formato particionado...
+2025-01-31 17:51:03,125 - INFO     - [database.py:164] Executando consulta: Compras...
+2025-01-31 17:51:20,510 - INFO     - [database.py:174] Consulta 'Compras' finalizada. Total de registros: 169801
+2025-01-31 17:51:20,511 - INFO     - [database.py:208] Processando dados da consulta 'Compras'...
+2025-01-31 17:51:20,555 - INFO     - [database.py:233] Gerando partição AnoMesDia com base na coluna 'DataEmissaoNF'
+2025-01-31 17:51:20,598 - INFO     - [dicionario_dados.py:58] Dicionário carregado para a consulta: Compras
+2025-01-31 17:51:20,636 - INFO     - [dicionario_dados.py:99] Coluna 'Quantidade' convertida automaticamente de float64 para int64.
+2025-01-31 17:51:20,722 - INFO     - [dicionario_dados.py:99] Coluna 'CodigoTransferencia' convertida automaticamente de float64 para int64.
+2025-01-31 17:51:20,728 - INFO     - [dicionario_dados.py:99] Coluna 'OrigemTransferencia' convertida automaticamente de float64 para int64.
+2025-01-31 17:51:20,734 - INFO     - [dicionario_dados.py:99] Coluna 'DestinoTransfencia' convertida automaticamente de float64 para int64.
+2025-01-31 17:51:20,818 - INFO     - [dicionario_dados.py:127] [Consulta: Compras] Tipos ajustados com sucesso.
+2025-01-31 17:51:20,819 - INFO     - [database.py:259] Salvando 'Compras' em formato particionado...
+2025-01-31 17:51:21,390 - INFO     - [database.py:164] Executando consulta: Estoque...
+2025-01-31 17:51:24,341 - INFO     - [database.py:174] Consulta 'Estoque' finalizada. Total de registros: 54640
+2025-01-31 17:51:24,342 - INFO     - [database.py:208] Processando dados da consulta 'Estoque'...
+2025-01-31 17:51:24,349 - INFO     - [dicionario_dados.py:58] Dicionário carregado para a consulta: Estoque
+2025-01-31 17:51:24,371 - INFO     - [dicionario_dados.py:99] Coluna 'CodigoProduto' convertida automaticamente de float64 para int64.
+2025-01-31 17:51:24,385 - INFO     - [dicionario_dados.py:99] Coluna 'QtdEstoque' convertida automaticamente de float64 para int64.
+2025-01-31 17:51:24,386 - INFO     - [dicionario_dados.py:99] Coluna 'QtdEstoqueMinimo' convertida automaticamente de float64 para int64.
+2025-01-31 17:51:24,414 - INFO     - [dicionario_dados.py:127] [Consulta: Estoque] Tipos ajustados com sucesso.
+2025-01-31 17:51:24,415 - INFO     - [database.py:259] Salvando 'Estoque' em formato particionado...
+2025-01-31 17:51:24,452 - INFO     - [database.py:164] Executando consulta: Fornecedores...
+2025-01-31 17:51:24,558 - INFO     - [database.py:174] Consulta 'Fornecedores' finalizada. Total de registros: 839
+2025-01-31 17:51:24,559 - INFO     - [database.py:208] Processando dados da consulta 'Fornecedores'...
+2025-01-31 17:51:24,560 - INFO     - [dicionario_dados.py:58] Dicionário carregado para a consulta: Fornecedores
+2025-01-31 17:51:24,561 - INFO     - [dicionario_dados.py:127] [Consulta: Fornecedores] Tipos ajustados com sucesso.
+2025-01-31 17:51:24,562 - INFO     - [database.py:259] Salvando 'Fornecedores' em formato particionado...
+2025-01-31 17:51:24,566 - INFO     - [database.py:164] Executando consulta: Funcionarios...
+2025-01-31 17:51:24,628 - INFO     - [database.py:174] Consulta 'Funcionarios' finalizada. Total de registros: 151
+2025-01-31 17:51:24,628 - INFO     - [database.py:208] Processando dados da consulta 'Funcionarios'...
+2025-01-31 17:51:24,630 - INFO     - [dicionario_dados.py:58] Dicionário carregado para a consulta: Funcionarios
+2025-01-31 17:51:24,631 - INFO     - [dicionario_dados.py:99] Coluna 'CodigoLoja' convertida automaticamente de float64 para int64.
+2025-01-31 17:51:24,632 - INFO     - [dicionario_dados.py:127] [Consulta: Funcionarios] Tipos ajustados com sucesso.
+2025-01-31 17:51:24,632 - INFO     - [database.py:259] Salvando 'Funcionarios' em formato particionado...
+2025-01-31 17:51:24,635 - INFO     - [database.py:164] Executando consulta: Produtos...
+2025-01-31 17:51:27,558 - INFO     - [database.py:174] Consulta 'Produtos' finalizada. Total de registros: 31257
+2025-01-31 17:51:27,558 - INFO     - [database.py:208] Processando dados da consulta 'Produtos'...
+2025-01-31 17:51:27,589 - INFO     - [dicionario_dados.py:58] Dicionário carregado para a consulta: Produtos
+2025-01-31 17:51:27,598 - INFO     - [dicionario_dados.py:127] [Consulta: Produtos] Tipos ajustados com sucesso.
+2025-01-31 17:51:27,598 - INFO     - [database.py:259] Salvando 'Produtos' em formato particionado...
+2025-01-31 17:51:27,654 - INFO     - [database.py:164] Executando consulta: Vendas...
+2025-01-31 17:53:11,548 - INFO     - [database.py:174] Consulta 'Vendas' finalizada. Total de registros: 893103
+2025-01-31 17:53:11,549 - INFO     - [database.py:208] Processando dados da consulta 'Vendas'...
+2025-01-31 17:53:13,018 - INFO     - [database.py:233] Gerando partição AnoMesDia com base na coluna 'DataVenda'
+2025-01-31 17:53:13,227 - INFO     - [dicionario_dados.py:58] Dicionário carregado para a consulta: Vendas
+2025-01-31 17:53:13,426 - INFO     - [dicionario_dados.py:99] Coluna 'Quantidade' convertida automaticamente de float64 para int64.
+2025-01-31 17:53:14,557 - INFO     - [dicionario_dados.py:99] Coluna 'CodigoCliente' convertida automaticamente de float64 para int64.
+2025-01-31 17:53:14,578 - INFO     - [dicionario_dados.py:99] Coluna 'CodigoEntregador' convertida automaticamente de float64 para int64.
+2025-01-31 17:53:14,582 - INFO     - [dicionario_dados.py:99] Coluna 'CodigoPBM' convertida automaticamente de float64 para int64.
+2025-01-31 17:53:14,825 - INFO     - [dicionario_dados.py:127] [Consulta: Vendas] Tipos ajustados com sucesso.
+2025-01-31 17:53:14,826 - INFO     - [database.py:259] Salvando 'Vendas' em formato particionado...
+2025-01-31 17:53:19,626 - INFO     - [database.py:65] Conexão com o banco de dados fechada.
+2025-01-31 17:53:19,626 - INFO     - [database.py:141] Conexão com o banco de dados fechada.
+2025-01-31 17:53:19,627 - INFO     - [main.py:173] Resumo das consultas concluídas:
+2025-01-31 17:53:19,627 - INFO     - [main.py:175]  - Clientes: temp\Clientes
+2025-01-31 17:53:19,628 - INFO     - [main.py:175]  - CodigoBarras: temp\CodigoBarras
+2025-01-31 17:53:19,628 - INFO     - [main.py:175]  - Compras: temp\Compras
+2025-01-31 17:53:19,628 - INFO     - [main.py:175]  - Estoque: temp\Estoque
+2025-01-31 17:53:19,629 - INFO     - [main.py:175]  - Fornecedores: temp\Fornecedores
+2025-01-31 17:53:19,629 - INFO     - [main.py:175]  - Funcionarios: temp\Funcionarios
+2025-01-31 17:53:19,630 - INFO     - [main.py:175]  - Produtos: temp\Produtos
+2025-01-31 17:53:19,630 - INFO     - [main.py:175]  - Vendas: temp\Vendas
+2025-01-31 17:53:19,630 - INFO     - [main.py:182] Iniciando envio da consulta 'Clientes'...
+2025-01-31 17:53:19,631 - INFO     - [storage.py:25] Iniciando envio da consulta 'Clientes' para 'ambos'.
+2025-01-31 17:53:19,631 - INFO     - [storage.py:99] Iniciando envio para Azure: pgfarma/Clientes
+2025-01-31 17:53:20,320 - INFO     - [storage.py:76] Conexão com o Azure inicializada com sucesso.
+2025-01-31 17:53:20,321 - INFO     - [azure_storage.py:43] [Clientes] Iniciando limpeza no Azure. Total de partições: 1
+2025-01-31 17:53:20,321 - INFO     - [azure_storage.py:44] [Clientes] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 17:53:20,892 - INFO     - [azure_storage.py:56] [Clientes] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 17:53:20,893 - INFO     - [azure_storage.py:138] [Clientes] Iniciando upload para Azure (1 arquivos) usando 1 threads...
+2025-01-31 17:53:22,054 - INFO     - [azure_storage.py:163] [Clientes] Upload para Azure concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 17:53:22,055 - INFO     - [storage.py:110] Todos os arquivos de 'pgfarma/Clientes' enviados para Azure com sucesso.
+2025-01-31 17:53:22,055 - INFO     - [storage.py:121] Iniciando envio para S3: pgfarma/Clientes
+2025-01-31 17:53:22,376 - INFO     - [storage.py:92] Conexão com o S3 inicializada com sucesso.
+2025-01-31 17:53:22,377 - INFO     - [s3_storage.py:126] [Clientes] Iniciando upload para o S3 (1 partições) usando 1 threads...
+2025-01-31 17:53:22,378 - INFO     - [s3_storage.py:44] [Clientes] Iniciando limpeza no S3. Total de partições: 1
+2025-01-31 17:53:22,378 - INFO     - [s3_storage.py:45] [Clientes] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 17:53:23,097 - INFO     - [s3_storage.py:59] [Clientes] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 17:53:25,056 - INFO     - [s3_storage.py:164] [Clientes] Upload para S3 concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 17:53:25,057 - INFO     - [storage.py:132] Todos os arquivos de 'pgfarma/Clientes' enviados para S3 com sucesso.
+2025-01-31 17:53:25,057 - INFO     - [storage.py:61] Todos os arquivos de 'pgfarma/Clientes' foram enviados com sucesso.
+2025-01-31 17:53:25,058 - INFO     - [main.py:191] Consulta 'Clientes' enviada com sucesso.
+2025-01-31 17:53:25,058 - INFO     - [main.py:182] Iniciando envio da consulta 'CodigoBarras'...
+2025-01-31 17:53:25,059 - INFO     - [storage.py:25] Iniciando envio da consulta 'CodigoBarras' para 'ambos'.
+2025-01-31 17:53:25,059 - INFO     - [storage.py:99] Iniciando envio para Azure: pgfarma/CodigoBarras
+2025-01-31 17:53:25,060 - INFO     - [azure_storage.py:43] [CodigoBarras] Iniciando limpeza no Azure. Total de partições: 1
+2025-01-31 17:53:25,060 - INFO     - [azure_storage.py:44] [CodigoBarras] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 17:53:25,199 - INFO     - [azure_storage.py:56] [CodigoBarras] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 17:53:25,200 - INFO     - [azure_storage.py:138] [CodigoBarras] Iniciando upload para Azure (1 arquivos) usando 1 threads...
+2025-01-31 17:53:26,211 - INFO     - [azure_storage.py:163] [CodigoBarras] Upload para Azure concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 17:53:26,212 - INFO     - [storage.py:110] Todos os arquivos de 'pgfarma/CodigoBarras' enviados para Azure com sucesso.
+2025-01-31 17:53:26,213 - INFO     - [storage.py:121] Iniciando envio para S3: pgfarma/CodigoBarras
+2025-01-31 17:53:26,213 - INFO     - [s3_storage.py:126] [CodigoBarras] Iniciando upload para o S3 (1 partições) usando 1 threads...
+2025-01-31 17:53:26,214 - INFO     - [s3_storage.py:44] [CodigoBarras] Iniciando limpeza no S3. Total de partições: 1
+2025-01-31 17:53:26,214 - INFO     - [s3_storage.py:45] [CodigoBarras] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 17:53:26,394 - INFO     - [s3_storage.py:59] [CodigoBarras] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 17:53:27,720 - INFO     - [s3_storage.py:164] [CodigoBarras] Upload para S3 concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 17:53:27,721 - INFO     - [storage.py:132] Todos os arquivos de 'pgfarma/CodigoBarras' enviados para S3 com sucesso.
+2025-01-31 17:53:27,722 - INFO     - [storage.py:61] Todos os arquivos de 'pgfarma/CodigoBarras' foram enviados com sucesso.
+2025-01-31 17:53:27,722 - INFO     - [main.py:191] Consulta 'CodigoBarras' enviada com sucesso.
+2025-01-31 17:53:27,723 - INFO     - [main.py:182] Iniciando envio da consulta 'Compras'...
+2025-01-31 17:53:27,723 - INFO     - [storage.py:25] Iniciando envio da consulta 'Compras' para 'ambos'.
+2025-01-31 17:53:27,724 - INFO     - [storage.py:99] Iniciando envio para Azure: pgfarma/Compras
+2025-01-31 17:53:27,742 - INFO     - [azure_storage.py:43] [Compras] Iniciando limpeza no Azure. Total de partições: 599
+2025-01-31 17:53:27,743 - INFO     - [azure_storage.py:44] [Compras] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5/AnoMesDia=20230131 ... idEmpresa=6790e8876601d5166c4965f5/AnoMesDia=20250131
+2025-01-31 17:54:53,730 - INFO     - [azure_storage.py:56] [Compras] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 17:54:53,744 - INFO     - [azure_storage.py:138] [Compras] Iniciando upload para Azure (599 arquivos) usando 1 threads...
+2025-01-31 17:56:49,139 - INFO     - [azure_storage.py:163] [Compras] Upload para Azure concluído. Total enviados: 599, Total com erro: 0
+2025-01-31 17:56:49,140 - INFO     - [storage.py:110] Todos os arquivos de 'pgfarma/Compras' enviados para Azure com sucesso.
+2025-01-31 17:56:49,140 - INFO     - [storage.py:121] Iniciando envio para S3: pgfarma/Compras
+2025-01-31 17:56:49,158 - INFO     - [s3_storage.py:126] [Compras] Iniciando upload para o S3 (600 partições) usando 1 threads...
+2025-01-31 17:56:49,172 - INFO     - [s3_storage.py:44] [Compras] Iniciando limpeza no S3. Total de partições: 599
+2025-01-31 17:56:49,172 - INFO     - [s3_storage.py:45] [Compras] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5/AnoMesDia=20230131 ... idEmpresa=6790e8876601d5166c4965f5/AnoMesDia=20250131
+2025-01-31 17:58:38,729 - INFO     - [s3_storage.py:59] [Compras] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:02:22,585 - INFO     - [s3_storage.py:164] [Compras] Upload para S3 concluído. Total enviados: 599, Total com erro: 0
+2025-01-31 18:02:22,587 - INFO     - [storage.py:132] Todos os arquivos de 'pgfarma/Compras' enviados para S3 com sucesso.
+2025-01-31 18:02:22,588 - INFO     - [storage.py:61] Todos os arquivos de 'pgfarma/Compras' foram enviados com sucesso.
+2025-01-31 18:02:22,589 - INFO     - [main.py:191] Consulta 'Compras' enviada com sucesso.
+2025-01-31 18:02:22,590 - INFO     - [main.py:182] Iniciando envio da consulta 'Estoque'...
+2025-01-31 18:02:22,590 - INFO     - [storage.py:25] Iniciando envio da consulta 'Estoque' para 'ambos'.
+2025-01-31 18:02:22,591 - INFO     - [storage.py:99] Iniciando envio para Azure: pgfarma/Estoque
+2025-01-31 18:02:22,592 - INFO     - [azure_storage.py:43] [Estoque] Iniciando limpeza no Azure. Total de partições: 1
+2025-01-31 18:02:22,593 - INFO     - [azure_storage.py:44] [Estoque] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 18:02:23,178 - INFO     - [azure_storage.py:56] [Estoque] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:02:23,180 - INFO     - [azure_storage.py:138] [Estoque] Iniciando upload para Azure (1 arquivos) usando 1 threads...
+2025-01-31 18:02:24,287 - INFO     - [azure_storage.py:163] [Estoque] Upload para Azure concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 18:02:24,288 - INFO     - [storage.py:110] Todos os arquivos de 'pgfarma/Estoque' enviados para Azure com sucesso.
+2025-01-31 18:02:24,288 - INFO     - [storage.py:121] Iniciando envio para S3: pgfarma/Estoque
+2025-01-31 18:02:24,289 - INFO     - [s3_storage.py:126] [Estoque] Iniciando upload para o S3 (1 partições) usando 1 threads...
+2025-01-31 18:02:24,290 - INFO     - [s3_storage.py:44] [Estoque] Iniciando limpeza no S3. Total de partições: 1
+2025-01-31 18:02:24,290 - INFO     - [s3_storage.py:45] [Estoque] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 18:02:24,464 - INFO     - [s3_storage.py:59] [Estoque] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:02:25,502 - INFO     - [s3_storage.py:164] [Estoque] Upload para S3 concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 18:02:25,503 - INFO     - [storage.py:132] Todos os arquivos de 'pgfarma/Estoque' enviados para S3 com sucesso.
+2025-01-31 18:02:25,504 - INFO     - [storage.py:61] Todos os arquivos de 'pgfarma/Estoque' foram enviados com sucesso.
+2025-01-31 18:02:25,504 - INFO     - [main.py:191] Consulta 'Estoque' enviada com sucesso.
+2025-01-31 18:02:25,505 - INFO     - [main.py:182] Iniciando envio da consulta 'Fornecedores'...
+2025-01-31 18:02:25,505 - INFO     - [storage.py:25] Iniciando envio da consulta 'Fornecedores' para 'ambos'.
+2025-01-31 18:02:25,506 - INFO     - [storage.py:99] Iniciando envio para Azure: pgfarma/Fornecedores
+2025-01-31 18:02:25,507 - INFO     - [azure_storage.py:43] [Fornecedores] Iniciando limpeza no Azure. Total de partições: 1
+2025-01-31 18:02:25,507 - INFO     - [azure_storage.py:44] [Fornecedores] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 18:02:25,648 - INFO     - [azure_storage.py:56] [Fornecedores] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:02:25,649 - INFO     - [azure_storage.py:138] [Fornecedores] Iniciando upload para Azure (1 arquivos) usando 1 threads...
+2025-01-31 18:02:25,887 - INFO     - [azure_storage.py:163] [Fornecedores] Upload para Azure concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 18:02:25,888 - INFO     - [storage.py:110] Todos os arquivos de 'pgfarma/Fornecedores' enviados para Azure com sucesso.
+2025-01-31 18:02:25,889 - INFO     - [storage.py:121] Iniciando envio para S3: pgfarma/Fornecedores
+2025-01-31 18:02:25,890 - INFO     - [s3_storage.py:126] [Fornecedores] Iniciando upload para o S3 (1 partições) usando 1 threads...
+2025-01-31 18:02:25,891 - INFO     - [s3_storage.py:44] [Fornecedores] Iniciando limpeza no S3. Total de partições: 1
+2025-01-31 18:02:25,891 - INFO     - [s3_storage.py:45] [Fornecedores] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 18:02:26,634 - INFO     - [s3_storage.py:59] [Fornecedores] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:02:27,322 - INFO     - [s3_storage.py:164] [Fornecedores] Upload para S3 concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 18:02:27,323 - INFO     - [storage.py:132] Todos os arquivos de 'pgfarma/Fornecedores' enviados para S3 com sucesso.
+2025-01-31 18:02:27,324 - INFO     - [storage.py:61] Todos os arquivos de 'pgfarma/Fornecedores' foram enviados com sucesso.
+2025-01-31 18:02:27,325 - INFO     - [main.py:191] Consulta 'Fornecedores' enviada com sucesso.
+2025-01-31 18:02:27,325 - INFO     - [main.py:182] Iniciando envio da consulta 'Funcionarios'...
+2025-01-31 18:02:27,326 - INFO     - [storage.py:25] Iniciando envio da consulta 'Funcionarios' para 'ambos'.
+2025-01-31 18:02:27,327 - INFO     - [storage.py:99] Iniciando envio para Azure: pgfarma/Funcionarios
+2025-01-31 18:02:27,327 - INFO     - [azure_storage.py:43] [Funcionarios] Iniciando limpeza no Azure. Total de partições: 1
+2025-01-31 18:02:27,328 - INFO     - [azure_storage.py:44] [Funcionarios] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 18:02:27,468 - INFO     - [azure_storage.py:56] [Funcionarios] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:02:27,469 - INFO     - [azure_storage.py:138] [Funcionarios] Iniciando upload para Azure (1 arquivos) usando 1 threads...
+2025-01-31 18:02:27,667 - INFO     - [azure_storage.py:163] [Funcionarios] Upload para Azure concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 18:02:27,668 - INFO     - [storage.py:110] Todos os arquivos de 'pgfarma/Funcionarios' enviados para Azure com sucesso.
+2025-01-31 18:02:27,668 - INFO     - [storage.py:121] Iniciando envio para S3: pgfarma/Funcionarios
+2025-01-31 18:02:27,669 - INFO     - [s3_storage.py:126] [Funcionarios] Iniciando upload para o S3 (1 partições) usando 1 threads...
+2025-01-31 18:02:27,670 - INFO     - [s3_storage.py:44] [Funcionarios] Iniciando limpeza no S3. Total de partições: 1
+2025-01-31 18:02:27,670 - INFO     - [s3_storage.py:45] [Funcionarios] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 18:02:27,848 - INFO     - [s3_storage.py:59] [Funcionarios] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:02:28,214 - INFO     - [s3_storage.py:164] [Funcionarios] Upload para S3 concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 18:02:28,215 - INFO     - [storage.py:132] Todos os arquivos de 'pgfarma/Funcionarios' enviados para S3 com sucesso.
+2025-01-31 18:02:28,216 - INFO     - [storage.py:61] Todos os arquivos de 'pgfarma/Funcionarios' foram enviados com sucesso.
+2025-01-31 18:02:28,217 - INFO     - [main.py:191] Consulta 'Funcionarios' enviada com sucesso.
+2025-01-31 18:02:28,217 - INFO     - [main.py:182] Iniciando envio da consulta 'Produtos'...
+2025-01-31 18:02:28,217 - INFO     - [storage.py:25] Iniciando envio da consulta 'Produtos' para 'ambos'.
+2025-01-31 18:02:28,218 - INFO     - [storage.py:99] Iniciando envio para Azure: pgfarma/Produtos
+2025-01-31 18:02:28,219 - INFO     - [azure_storage.py:43] [Produtos] Iniciando limpeza no Azure. Total de partições: 1
+2025-01-31 18:02:28,219 - INFO     - [azure_storage.py:44] [Produtos] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 18:02:28,359 - INFO     - [azure_storage.py:56] [Produtos] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:02:28,360 - INFO     - [azure_storage.py:138] [Produtos] Iniciando upload para Azure (1 arquivos) usando 1 threads...
+2025-01-31 18:02:29,129 - INFO     - [azure_storage.py:163] [Produtos] Upload para Azure concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 18:02:29,130 - INFO     - [storage.py:110] Todos os arquivos de 'pgfarma/Produtos' enviados para Azure com sucesso.
+2025-01-31 18:02:29,131 - INFO     - [storage.py:121] Iniciando envio para S3: pgfarma/Produtos
+2025-01-31 18:02:29,131 - INFO     - [s3_storage.py:126] [Produtos] Iniciando upload para o S3 (1 partições) usando 1 threads...
+2025-01-31 18:02:29,132 - INFO     - [s3_storage.py:44] [Produtos] Iniciando limpeza no S3. Total de partições: 1
+2025-01-31 18:02:29,132 - INFO     - [s3_storage.py:45] [Produtos] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 18:02:29,311 - INFO     - [s3_storage.py:59] [Produtos] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:02:30,888 - INFO     - [s3_storage.py:164] [Produtos] Upload para S3 concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 18:02:30,889 - INFO     - [storage.py:132] Todos os arquivos de 'pgfarma/Produtos' enviados para S3 com sucesso.
+2025-01-31 18:02:30,889 - INFO     - [storage.py:61] Todos os arquivos de 'pgfarma/Produtos' foram enviados com sucesso.
+2025-01-31 18:02:30,890 - INFO     - [main.py:191] Consulta 'Produtos' enviada com sucesso.
+2025-01-31 18:02:30,891 - INFO     - [main.py:182] Iniciando envio da consulta 'Vendas'...
+2025-01-31 18:02:30,891 - INFO     - [storage.py:25] Iniciando envio da consulta 'Vendas' para 'ambos'.
+2025-01-31 18:02:30,892 - INFO     - [storage.py:99] Iniciando envio para Azure: pgfarma/Vendas
+2025-01-31 18:02:30,915 - INFO     - [azure_storage.py:43] [Vendas] Iniciando limpeza no Azure. Total de partições: 726
+2025-01-31 18:02:30,916 - INFO     - [azure_storage.py:44] [Vendas] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5/AnoMesDia=20221231 ... idEmpresa=6790e8876601d5166c4965f5/AnoMesDia=20250131
+2025-01-31 18:04:16,929 - INFO     - [azure_storage.py:56] [Vendas] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:04:16,950 - INFO     - [azure_storage.py:138] [Vendas] Iniciando upload para Azure (726 arquivos) usando 1 threads...
+2025-01-31 18:06:55,436 - INFO     - [azure_storage.py:163] [Vendas] Upload para Azure concluído. Total enviados: 726, Total com erro: 0
+2025-01-31 18:06:55,437 - INFO     - [storage.py:110] Todos os arquivos de 'pgfarma/Vendas' enviados para Azure com sucesso.
+2025-01-31 18:06:55,438 - INFO     - [storage.py:121] Iniciando envio para S3: pgfarma/Vendas
+2025-01-31 18:06:55,465 - INFO     - [s3_storage.py:126] [Vendas] Iniciando upload para o S3 (727 partições) usando 1 threads...
+2025-01-31 18:06:55,489 - INFO     - [s3_storage.py:44] [Vendas] Iniciando limpeza no S3. Total de partições: 726
+2025-01-31 18:06:55,490 - INFO     - [s3_storage.py:45] [Vendas] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5/AnoMesDia=20221231 ... idEmpresa=6790e8876601d5166c4965f5/AnoMesDia=20250131
+2025-01-31 18:09:09,144 - INFO     - [s3_storage.py:59] [Vendas] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:14:32,228 - INFO     - [s3_storage.py:164] [Vendas] Upload para S3 concluído. Total enviados: 726, Total com erro: 0
+2025-01-31 18:14:32,229 - INFO     - [storage.py:132] Todos os arquivos de 'pgfarma/Vendas' enviados para S3 com sucesso.
+2025-01-31 18:14:32,230 - INFO     - [storage.py:61] Todos os arquivos de 'pgfarma/Vendas' foram enviados com sucesso.
+2025-01-31 18:14:32,230 - INFO     - [main.py:191] Consulta 'Vendas' enviada com sucesso.
+2025-01-31 18:14:32,231 - INFO     - [main.py:203] Resumo do envio: 8 consultas enviadas com sucesso, 0 falhas.
+2025-01-31 18:14:32,231 - INFO     - [main.py:209] Todas as consultas foram enviadas com sucesso. Prosseguindo com a tabela de atualização...
+2025-01-31 18:14:32,232 - INFO     - [main.py:50] Criando tabela de atualização...
+2025-01-31 18:14:32,233 - INFO     - [dicionario_dados.py:58] Dicionário carregado para a consulta: Atualizacao
+2025-01-31 18:14:32,234 - INFO     - [dicionario_dados.py:127] [Consulta: Atualizacao] Tipos ajustados com sucesso.
+2025-01-31 18:14:32,237 - INFO     - [main.py:72] Tabela de atualização criada. Iniciando envio...
+2025-01-31 18:14:32,238 - INFO     - [storage.py:25] Iniciando envio da consulta 'Atualizacao' para 'ambos'.
+2025-01-31 18:14:32,238 - INFO     - [storage.py:99] Iniciando envio para Azure: pgfarma/Atualizacao
+2025-01-31 18:14:32,239 - INFO     - [azure_storage.py:43] [Atualizacao] Iniciando limpeza no Azure. Total de partições: 1
+2025-01-31 18:14:32,240 - INFO     - [azure_storage.py:44] [Atualizacao] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 18:14:32,797 - INFO     - [azure_storage.py:56] [Atualizacao] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:14:32,798 - INFO     - [azure_storage.py:138] [Atualizacao] Iniciando upload para Azure (1 arquivos) usando 1 threads...
+2025-01-31 18:14:32,994 - INFO     - [azure_storage.py:163] [Atualizacao] Upload para Azure concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 18:14:32,995 - INFO     - [storage.py:110] Todos os arquivos de 'pgfarma/Atualizacao' enviados para Azure com sucesso.
+2025-01-31 18:14:32,995 - INFO     - [storage.py:121] Iniciando envio para S3: pgfarma/Atualizacao
+2025-01-31 18:14:32,996 - INFO     - [s3_storage.py:126] [Atualizacao] Iniciando upload para o S3 (1 partições) usando 1 threads...
+2025-01-31 18:14:32,996 - INFO     - [s3_storage.py:44] [Atualizacao] Iniciando limpeza no S3. Total de partições: 1
+2025-01-31 18:14:32,997 - INFO     - [s3_storage.py:45] [Atualizacao] Partições afetadas: idEmpresa=6790e8876601d5166c4965f5
+2025-01-31 18:14:33,172 - INFO     - [s3_storage.py:59] [Atualizacao] Nenhum arquivo encontrado para exclusão nas partições selecionadas.
+2025-01-31 18:14:33,528 - INFO     - [s3_storage.py:164] [Atualizacao] Upload para S3 concluído. Total enviados: 1, Total com erro: 0
+2025-01-31 18:14:33,528 - INFO     - [storage.py:132] Todos os arquivos de 'pgfarma/Atualizacao' enviados para S3 com sucesso.
+2025-01-31 18:14:33,529 - INFO     - [storage.py:61] Todos os arquivos de 'pgfarma/Atualizacao' foram enviados com sucesso.
+2025-01-31 18:14:33,530 - INFO     - [main.py:79] Tabela de atualização enviada com sucesso!
+2025-01-31 18:14:33,758 - INFO     - [main.py:227] Diretório temporário removido.
+2025-01-31 18:14:33,759 - INFO     - [main.py:230] Sistema encerrado às 31/01/2025 18:14:33
