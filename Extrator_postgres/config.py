@@ -36,35 +36,37 @@ class GeneralConfig(BaseConfig):
     def __init__(self):
         """Carrega e valida configurações gerais do sistema."""
         self.num_workers = int(os.getenv("NUM_WORKERS", 4))  # Padrão: 4 workers
-        self.qtd_linhas = int(os.getenv("QTD_LINHAS", 10000))  # Padrão: 10000 linhas
         self._validar(
-            [self.num_workers, self.qtd_linhas],
-            ["NUM_WORKERS", "QTD_LINHAS"]
+            [self.num_workers],
+            ["NUM_WORKERS"]
         )
 
     def to_dict(self):
         return {
-            "num_workers": self.num_workers,
-            "qtd_linhas": self.qtd_linhas,
+            "num_workers": self.num_workers
         }
 
 
 # Classe para configuração do banco de dados
-class DatabaseConfig(BaseConfig):
+class DatabaseConfig:
     def __init__(self):
-        """Carrega e valida as configurações do banco de dados."""
-        self.host = os.getenv("DATABASE_HOST")
-        self.port = int(os.getenv("DATABASE_PORT", 3306))  # Padrão: 3306
-        self.database = os.getenv("DATABASE_DATABASE")
-        self.user = os.getenv("DATABASE_USER")
-        self.password = os.getenv("DATABASE_PASSWORD")
-        self._validar(
-            [self.host, self.port, self.database, self.user, self.password],
-            ["DATABASE_HOST", "DATABASE_PORT", "DATABASE_DATABASE", "DATABASE_USER", "DATABASE_PASSWORD"]
-        )
+        """Carrega as configurações do banco de dados. Todos os campos são opcionais."""
+        self.host = os.getenv("DATABASE_HOST") or None
+        self.port = self._get_valid_port(os.getenv("DATABASE_PORT", "3306"))
+        self.database = os.getenv("DATABASE_DATABASE") or None
+        self.user = os.getenv("DATABASE_USER") or None
+        self.password = os.getenv("DATABASE_PASSWORD") or None
+
+    @staticmethod
+    def _get_valid_port(port_value):
+        """Converte a porta para inteiro, garantindo um valor válido."""
+        try:
+            return int(port_value) if port_value else 3306
+        except ValueError:
+            return 3306  # Se a conversão falhar, usa a porta padrão.
 
     def to_dict(self):
-        """Converte a configuração em um dicionário."""
+        """Converte a configuração em um dicionário, omitindo valores None."""
         return {
             "host": self.host,
             "port": self.port,
@@ -72,6 +74,8 @@ class DatabaseConfig(BaseConfig):
             "user": self.user,
             "password": self.password,
         }
+
+
 
 
 # Classe para configuração do MongoDB
@@ -222,18 +226,6 @@ def configurar_conexao_banco(parametros_mongo: dict) -> dict:
         "password": parametros_mongo.get("ConexaoBanco", {}).get("senha", DATABASE_CONFIG["password"]),
     }
 
-def configurar_parametro_qtd_linha(parametros_mongo: dict) -> int:
-    """
-    Configura os parâmetros de configuração de chunk para as consultas, priorizando os valores do MongoDB.
-
-    Args:
-        parametros_mongo (dict): Parâmetros obtidos do MongoDB.
-
-    Returns:
-        int: valor do parametro
-    """
-    logging.info("Configurando quantidade de linhas por consulta a partir dos parâmetros.")
-    return parametros_mongo.get("QuantidadeLinhas", 10000)
 
 def configurar_parametro_workers(parametros_mongo: dict) -> int:
     """

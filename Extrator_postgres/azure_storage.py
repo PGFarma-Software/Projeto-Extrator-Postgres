@@ -85,15 +85,18 @@ def filtrar_particoes_existentes(particoes_existentes: Set[str], particoes_recar
 # --------------------------------------------------
 def definir_particoes_para_exclusao(particoes_existentes: Set[str], particoes_recarregadas: Set[str]) -> Dict[str, Set[str]]:
     """
-    Define as partições a serem excluídas conforme os níveis:
-      - Tipo A (somente idEmpresa): se não houver indicadores de data.
-      - Tipo B (idEmpresa + Data): avalia níveis Dia, Mes, Ano.
-    Todas as comparações usam strings normalizadas.
+    Define as partições a serem excluídas de acordo com o tipo de consulta:
+      - Tipo A (Somente idEmpresa): Se as partições recarregadas não contiverem indicadores de data,
+        a exclusão será feita a nível de idEmpresa.
+      - Tipo B (idEmpresa + Data): Se houver informações de data, avalia os níveis Dia, Mes e Ano,
+        excluindo somente os dados que estão sendo recarregados.
+    Todas as comparações são feitas com strings normalizadas.
     """
     if not particoes_existentes:
         return {}
+
     particoes_recarregadas_norm = {normalizar_particao(r) for r in particoes_recarregadas}
-    tem_data = any(token in r for r in particoes_recarregadas_norm for token in ("Ano=", "Mes=", "Dia="))
+    tem_data = any(token in r for r in particoes_recarregadas_norm for token in ("Ano=", "Mes="))
     if not tem_data:
         exclusao = {"idEmpresa": set()}
         id_empresas = {normalizar_particao(r).split("/")[0] for r in particoes_recarregadas_norm if "idEmpresa=" in r}
@@ -102,16 +105,8 @@ def definir_particoes_para_exclusao(particoes_existentes: Set[str], particoes_re
                 exclusao["idEmpresa"].add(id_empresa)
         return exclusao
     else:
-        exclusao = {"Dia": set(), "Mes": set(), "Ano": set(), "idEmpresa": set()}
-        exclusao["Dia"] = {normalizar_particao(r) for r in particoes_recarregadas_norm if all(token in r for token in ("Ano=", "Mes=", "Dia="))}
-        meses_map: Dict[str, Set[str]] = {}
-        for r in exclusao["Dia"]:
-            mes = r.rsplit("/", 1)[0]
-            meses_map.setdefault(mes, set()).add(r)
-        for mes, dias_recarregados in meses_map.items():
-            dias_existentes = {normalizar_particao(p) for p in particoes_existentes if normalizar_particao(p).startswith(mes)}
-            if dias_existentes and dias_existentes == dias_recarregados:
-                exclusao["Mes"].add(mes)
+        exclusao = {"Mes": set(), "Ano": set(), "idEmpresa": set()}
+        exclusao["Mes"] = {normalizar_particao(r) for r in particoes_recarregadas_norm if all(token in r for token in ("Ano=", "Mes="))}
         anos_map: Dict[str, Set[str]] = {}
         for mes in exclusao["Mes"]:
             ano = mes.split("/")[0]
@@ -120,7 +115,7 @@ def definir_particoes_para_exclusao(particoes_existentes: Set[str], particoes_re
             meses_existentes = {normalizar_particao(p) for p in particoes_existentes if normalizar_particao(p).startswith(ano)}
             if meses_existentes and meses_existentes == meses_recarregados:
                 exclusao["Ano"].add(ano)
-        particoes_excluidas = exclusao["Dia"] | exclusao["Mes"] | exclusao["Ano"]
+        particoes_excluidas = exclusao["Mes"] | exclusao["Ano"]
         id_empresas = {normalizar_particao(r).split("/")[0] for r in particoes_recarregadas_norm if "idEmpresa=" in r}
         for id_empresa in id_empresas:
             particoes_empresa = {normalizar_particao(p) for p in particoes_existentes if normalizar_particao(p).startswith(id_empresa)}
@@ -129,7 +124,6 @@ def definir_particoes_para_exclusao(particoes_existentes: Set[str], particoes_re
             else:
                 logging.info(f"{id_empresa} NÃO será excluída pois possui partições válidas não recarregadas.")
         return exclusao
-
 # --------------------------------------------------
 # FUNÇÃO DE DELEÇÃO EM BATCH (SÍNCRONA) PARA AZURE
 # --------------------------------------------------

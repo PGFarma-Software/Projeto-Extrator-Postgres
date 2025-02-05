@@ -91,7 +91,6 @@ def executar_consultas(
     particoes_criadas = {}
     os.makedirs(pasta_temp, exist_ok=True)
 
-    # Se for execução sequencial, cria uma única conexão; se paralela, cada thread criará a sua
     conexao_persistente = conectar_ao_banco(**conexoes_config)
 
     def processa_consulta(consulta: Dict[str, str]) -> Tuple[str, str, Set[str]]:
@@ -99,13 +98,9 @@ def executar_consultas(
         query = consulta.get("query")
         try:
             inicio = time.time()
-            # Se a consulta for muito grande, pode-se usar chunksize (exemplo comentado abaixo):
-            df_iter = pd.read_sql(query, con=conexao_persistente, chunksize=10000)
-            df_pandas = pd.concat(df_iter)
-            #df_pandas = pd.read_sql(query, con=conexao_persistente)
+            pasta_consulta, particoes = executar_consulta(conexao_persistente, nome_consulta, query, pasta_temp)
             duracao = time.time() - inicio
             logging.info(f"Consulta '{nome_consulta}' processada em {duracao:.2f} segundos.")
-            pasta_consulta, particoes = executar_consulta(conexao_persistente, nome_consulta, query, pasta_temp)
             return nome_consulta, pasta_consulta, particoes
         except Exception as e:
             logging.error(f"Erro ao processar consulta '{nome_consulta}': {e}")
@@ -132,7 +127,6 @@ def executar_consultas(
     finally:
         if conexao_persistente:
             fechar_conexao(conexao_persistente)
-            logging.info("Conexão com o banco de dados fechada (sequencial).")
 
     return resultados, particoes_criadas
 
@@ -209,7 +203,7 @@ def processar_dados(df_pandas: pd.DataFrame, nome: str, pasta_temp: str) -> Tupl
             raise ValueError("A coluna 'idEmpresa' é obrigatória para particionamento.")
 
         logging.info(f"Salvando '{nome}' em formato particionado...")
-        partition_cols = ["idEmpresa"] + (["Ano", "Mes", "Dia"] if coluna_data else [])
+        partition_cols = ["idEmpresa"] + (["Ano", "Mes"] if coluna_data else [])
         pq.write_to_dataset(
             df_polars.to_arrow(),
             root_path=pasta_consulta,

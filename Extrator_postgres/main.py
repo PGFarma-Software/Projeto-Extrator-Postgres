@@ -11,14 +11,19 @@ import pytz
 
 from config import (
     MONGO_CONFIG, STORAGE_CONFIG, configurar_destino_parametros,
-    configurar_conexao_banco, configurar_parametro_workers,
-    configurar_parametro_qtd_linha
+    configurar_conexao_banco, configurar_parametro_workers
 )
 from database import executar_consultas
 from dicionario_dados import ajustar_tipos_dados
 from logging_config import LoggingConfigurator
 from mongo import MongoDBConnector
 from storage import enviar_resultados
+
+import asyncio
+import sys
+
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 logging.basicConfig(
     level=logging.INFO,
@@ -117,7 +122,6 @@ def main():
                                                                              parametros_mongo_nuvem)
         conexoes_config = configurar_conexao_banco(parametros_mongo_empresa)
 
-        qtd_linhas = configurar_parametro_qtd_linha(parametros_mongo_empresa)
         workers = configurar_parametro_workers(parametros_mongo_empresa)
 
         # 🔹 Capturar corretamente container e bucket baseado na estrutura do destino_config
