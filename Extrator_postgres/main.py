@@ -3,6 +3,7 @@ import os
 import shutil
 import sys
 import threading
+import time
 from datetime import datetime
 
 import polars as pl
@@ -24,6 +25,9 @@ import sys
 
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+# Variável global para controle do sistema
+sistema_executando = True
 
 logging.basicConfig(
     level=logging.INFO,
@@ -94,12 +98,17 @@ def main():
     """
     Função principal que orquestra o fluxo de execução do sistema.
     """
+
+    global sistema_executando
+
     try:
         configurador = LoggingConfigurator()
         configurador.configurar_logging()
+
         timezone = pytz.timezone("America/Sao_Paulo")
         inicio_processo = datetime.now(timezone).strftime("%d/%m/%Y %H:%M:%S")
         logging.info(f"Sistema iniciado às {inicio_processo}")
+
         if os.path.exists("temp"):
             shutil.rmtree("temp")
             logging.info("Diretório temporário removido.")
@@ -139,7 +148,7 @@ def main():
 
         logging.info(f"Executando com {workers} threads.")
 
-        consultas = parametros_mongo_empresa.get("parametrizacaoBi", {}).get("consultas", [])
+        consultas = parametros_mongo_empresa.get("parametrizacaoIntegracao", {}).get("consultas", [])
         if not consultas:
             logging.error("Nenhuma consulta configurada.")
             return
@@ -149,7 +158,7 @@ def main():
             consultas = [c for c in consultas if c.get("name") == consulta_desejada]
             if not consultas:
                 logging.warning(f"Consulta '{consulta_desejada}' não encontrada. Executando todas as consultas.")
-                consultas = parametros_mongo_empresa.get("parametrizacaoBi", {}).get("consultas", [])
+                consultas = parametros_mongo_empresa.get("parametrizacaoIntegracao", {}).get("consultas", [])
 
         if not consultas:
             logging.error("Nenhuma consulta válida encontrada.")

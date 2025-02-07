@@ -158,12 +158,23 @@ def executar_consulta(conexao, nome: str, query: str, pasta_temp: str) -> Tuple[
 
 def processar_dados(df_pandas: pd.DataFrame, nome: str, pasta_temp: str) -> Tuple[str, Set[str]]:
     """
-    Processa os dados resultantes da consulta:
-      - Realiza tratamentos (ajustes de colunas de data/hora, conversão para Polars).
-      - Adiciona colunas auxiliares (DataHoraAtualizacao, idEmpresa).
-      - Salva os dados em formato Parquet particionado (por idEmpresa e, se aplicável, por Ano/Mes/Dia).
+    Processes a pandas DataFrame by applying transformations, converting it to a Polars DataFrame,
+    and saving the data in a partitioned Parquet format. Additionally, it handles specific adjustments
+    based on the data context (e.g., sales or purchases) and ensures certain columns are correctly
+    formatted or present. The function creates a temporary directory for saving files and logs
+    information about the process flow.
 
-    Retorna o caminho da pasta final e o conjunto de partições criadas.
+    Parameters:
+        df_pandas (pd.DataFrame): Input pandas DataFrame to be processed.
+        nome (str): Name of the dataset, used for context-specific column handling.
+        pasta_temp (str): Path to the temporary folder where files will be saved.
+
+    Returns:
+        Tuple[str, Set[str]]: A tuple where the first element is the path to the generated dataset,
+        and the second element is a set containing the paths of the created partitions.
+
+    Raises:
+        ValueError: If the required 'idEmpresa' column is missing from the processed Polars DataFrame.
     """
     try:
         os.makedirs(pasta_temp, exist_ok=True)
@@ -192,10 +203,9 @@ def processar_dados(df_pandas: pd.DataFrame, nome: str, pasta_temp: str) -> Tupl
             df_polars = df_polars.with_columns(pl.col(coluna_data).cast(pl.Utf8))
             df_polars = df_polars.with_columns([
                 pl.col(coluna_data).str.slice(0, 4).alias("Ano"),
-                pl.col(coluna_data).str.slice(5, 2).alias("Mes"),
-                pl.col(coluna_data).str.slice(8, 2).alias("Dia")
+                pl.col(coluna_data).str.slice(5, 2).alias("Mes")
             ])
-          #  amostra_particoes = df_polars.select(["Ano", "Mes", "Dia"]).unique().head(5)
+         #   amostra_particoes = df_polars.select(["Ano", "Mes", "Dia"]).unique().head(5)
          #   logging.info(f"Amostra das partições para '{nome}':\n{amostra_particoes.to_pandas().to_string(index=False)}")
 
         df_polars = ajustar_tipos_dados(df_polars, nome)

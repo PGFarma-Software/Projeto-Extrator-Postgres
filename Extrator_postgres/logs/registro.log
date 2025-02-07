@@ -1003,3 +1003,53 @@ connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL:  passw
 2025-02-05 13:51:01,387 - INFO     - [main.py:85] Tabela de atualização enviada com sucesso!
 2025-02-05 13:51:01,407 - INFO     - [main.py:232] Diretório temporário removido.
 2025-02-05 13:51:01,408 - INFO     - [main.py:235] Sistema encerrado às 05/02/2025 13:51:01
+2025-02-06 18:04:50,046 - INFO     - [logging_config.py:91]  Sistema iniciado no modo: local
+2025-02-06 18:04:51,275 - INFO     - [main.py:104] Sistema iniciado às 06/02/2025 18:04:51
+2025-02-06 18:04:51,355 - INFO     - [mongo.py:42] Conectando ao MongoDB...
+2025-02-06 18:04:52,993 - INFO     - [mongo.py:59] Parâmetros obtidos com sucesso do MongoDB para o cliente 'Cliente 416 - Teste Adriano H Postgres Alpha 7'.
+2025-02-06 18:04:53,160 - INFO     - [mongo.py:75] Conectando ao MongoDB...
+2025-02-06 18:04:54,579 - INFO     - [mongo.py:86] Parâmetros obtidos com sucesso do MongoDB: 1 documentos encontrados.
+2025-02-06 18:04:54,722 - INFO     - [config.py:220] Configurando conexão com o banco de dados a partir dos parâmetros.
+2025-02-06 18:04:54,723 - INFO     - [config.py:240] Configurando numero de workers a partir dos parâmetros.
+2025-02-06 18:04:54,723 - INFO     - [main.py:139] Os dados serão enviados para **Azure Blob Storage** no container 'adriano-teste' e para **Amazon S3** no bucket 'docker-teste'.
+2025-02-06 18:04:54,724 - INFO     - [main.py:142] Executando com 1 threads.
+2025-02-06 18:04:54,725 - INFO     - [database.py:42] Conectando ao banco de dados PostgreSQL...
+2025-02-06 18:05:09,842 - INFO     - [logging_config.py:91]  Sistema iniciado no modo: local
+2025-02-06 18:05:09,859 - INFO     - [main.py:104] Sistema iniciado às 06/02/2025 18:05:09
+2025-02-06 18:05:09,860 - INFO     - [main.py:107] Diretório temporário removido.
+2025-02-06 18:05:09,907 - INFO     - [mongo.py:42] Conectando ao MongoDB...
+2025-02-06 18:05:11,628 - INFO     - [mongo.py:59] Parâmetros obtidos com sucesso do MongoDB para o cliente 'Cliente 416 - Teste Adriano H Postgres Alpha 7'.
+2025-02-06 18:05:11,786 - INFO     - [mongo.py:75] Conectando ao MongoDB...
+2025-02-06 18:05:13,263 - INFO     - [mongo.py:86] Parâmetros obtidos com sucesso do MongoDB: 1 documentos encontrados.
+2025-02-06 18:05:13,409 - INFO     - [config.py:220] Configurando conexão com o banco de dados a partir dos parâmetros.
+2025-02-06 18:05:13,410 - INFO     - [config.py:240] Configurando numero de workers a partir dos parâmetros.
+2025-02-06 18:05:13,411 - INFO     - [main.py:139] Os dados serão enviados para **Azure Blob Storage** no container 'adriano-teste' e para **Amazon S3** no bucket 'docker-teste'.
+2025-02-06 18:05:13,411 - INFO     - [main.py:142] Executando com 1 threads.
+2025-02-06 18:05:13,412 - INFO     - [database.py:42] Conectando ao banco de dados PostgreSQL...
+2025-02-06 18:05:28,119 - INFO     - [logging_config.py:91]  Sistema iniciado no modo: local
+2025-02-06 18:05:28,136 - INFO     - [main.py:104] Sistema iniciado às 06/02/2025 18:05:28
+2025-02-06 18:05:28,136 - INFO     - [main.py:107] Diretório temporário removido.
+2025-02-06 18:05:28,184 - INFO     - [mongo.py:42] Conectando ao MongoDB...
+2025-02-07 15:42:45,868 - INFO     - [logging_config.py:91]  Sistema iniciado no modo: local
+2025-02-07 15:42:45,887 - INFO     - [main.py:110] Sistema iniciado às 07/02/2025 15:42:45
+2025-02-07 15:42:45,964 - INFO     - [mongo.py:42] Conectando ao MongoDB...
+2025-02-07 15:42:47,579 - INFO     - [mongo.py:59] Parâmetros obtidos com sucesso do MongoDB para o cliente 'Cliente 416 - Teste Adriano H Postgres Alpha 7'.
+2025-02-07 15:42:47,798 - INFO     - [mongo.py:75] Conectando ao MongoDB...
+2025-02-07 15:42:49,280 - INFO     - [mongo.py:86] Parâmetros obtidos com sucesso do MongoDB: 1 documentos encontrados.
+2025-02-07 15:42:49,436 - INFO     - [config.py:220] Configurando conexão com o banco de dados a partir dos parâmetros.
+2025-02-07 15:42:49,437 - INFO     - [config.py:241] Configurando numero de workers a partir dos parâmetros.
+2025-02-07 15:42:49,437 - INFO     - [main.py:146] Os dados serão enviados para **Azure Blob Storage** no container 'adriano-teste' e para **Amazon S3** no bucket 'docker-teste'.
+2025-02-07 15:42:49,438 - INFO     - [main.py:149] Executando com 1 threads.
+2025-02-07 15:42:49,439 - INFO     - [database.py:42] Conectando ao banco de dados PostgreSQL...
+2025-02-07 15:42:53,563 - ERROR    - [database.py:52] Erro ao conectar ao banco de dados PostgreSQL: (psycopg2.OperationalError) connection to server at "localhost" (::1), port 5432 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-02-07 15:42:53,565 - ERROR    - [main.py:230] Erro na execução principal: (psycopg2.OperationalError) connection to server at "localhost" (::1), port 5432 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)

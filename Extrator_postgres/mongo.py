@@ -49,7 +49,7 @@ class MongoDBConnector:
                     return None
 
                 # Validação de chaves essenciais
-                campos_essenciais = ["ConexaoBanco", "parametrizacaoBi"]
+                campos_essenciais = ["parametrizacaoIntegracao"]
                 for campo in campos_essenciais:
                     if campo not in parametros:
                         logging.error(f"Parâmetro '{campo}' ausente para o cliente '{idEmp}' no MongoDB.")

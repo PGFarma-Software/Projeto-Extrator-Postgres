@@ -219,12 +219,13 @@ def configurar_conexao_banco(parametros_mongo: dict) -> dict:
     """
     logging.info("Configurando conexão com o banco de dados a partir dos parâmetros.")
     return {
-        "host": parametros_mongo.get("ConexaoBanco", {}).get("host", DATABASE_CONFIG["host"]),
-        "port": int(parametros_mongo.get("ConexaoBanco", {}).get("porta", DATABASE_CONFIG["port"])),
-        "database": parametros_mongo.get("ConexaoBanco", {}).get("nomeOuCaminhoBanco", DATABASE_CONFIG["database"]),
-        "user": parametros_mongo.get("ConexaoBanco", {}).get("usuario", DATABASE_CONFIG["user"]),
-        "password": parametros_mongo.get("ConexaoBanco", {}).get("senha", DATABASE_CONFIG["password"]),
+        "host": parametros_mongo.get("parametrizacaoIntegracao", {}).get("ConexaoBanco", {}).get("host", DATABASE_CONFIG["host"]),
+        "port": int(parametros_mongo.get("parametrizacaoIntegracao", {}).get("ConexaoBanco", {}).get("porta", DATABASE_CONFIG["port"])),
+        "database": parametros_mongo.get("parametrizacaoIntegracao", {}).get("ConexaoBanco", {}).get("nomeOuCaminhoBanco", DATABASE_CONFIG["database"]),
+        "user": parametros_mongo.get("parametrizacaoIntegracao", {}).get("ConexaoBanco", {}).get("usuario", DATABASE_CONFIG["user"]),
+        "password": parametros_mongo.get("parametrizacaoIntegracao", {}).get("ConexaoBanco", {}).get("senha", DATABASE_CONFIG["password"]),
     }
+
 
 
 def configurar_parametro_workers(parametros_mongo: dict) -> int:
@@ -238,7 +239,7 @@ def configurar_parametro_workers(parametros_mongo: dict) -> int:
         int: valor do parametro
     """
     logging.info("Configurando numero de workers a partir dos parâmetros.")
-    return parametros_mongo.get("Workers", 4)
+    return parametros_mongo.get("parametrizacaoIntegracao", {}).get("Workers", 4)
 
 def obter_diretorio_temporario():
     """
